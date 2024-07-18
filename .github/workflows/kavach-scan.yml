@@ -41,16 +41,3 @@ jobs:
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  # self-hosted-job:
-  #   name: Self-Hosted Job
-  #   runs-on: self-hosted
-  #   needs: codeql
-
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Run a script on Self-Hosted Runner
-  #       run: |
-  #         echo "Running on self-hosted runner"
