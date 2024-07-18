@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python', 'java' ]
+        language: [ 'TypeScript']
     
     steps:
     - name: Checking For Agent Heart Beat
