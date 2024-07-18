@@ -8,9 +8,10 @@ on:
 #   workflow_dispatch:
 
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: self-hosted
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+
     permissions:
       actions: read
       contents: read
@@ -19,31 +20,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'TypeScript']
-    
+        language: [ 'typescript']
+
     steps:
-    - name: Checking For Agent Heart Beat
-      run: |
-          echo "Running on a self-hosted runner"
-          uname -a
-          echo "I am Alive"
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        database: ./codeql-databases
-    
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
-    
-    - name: Run CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        database: ./codeql-databases
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
 
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
 
-    
+  self-hosted-job:
+    name: Self-Hosted Job
+    runs-on: self-hosted
+    needs: codeql
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run a script on Self-Hosted Runner
+        run: |
+          echo "Running on self-hosted runner"
