@@ -19,15 +19,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'rust' ]
-
+        language: [ 'javascript', 'python', 'java' ]
+    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Check For Heart Beat
+    - name: Checking For Agent Heart Beat
       run: |
           echo "Running on a self-hosted runner"
           uname -a
-          echo "Job complete"
+          echo "I am Alive"
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        database: ./codeql-databases
+    
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        database: ./codeql-databases
+
+
     
